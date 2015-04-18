@@ -78,7 +78,9 @@
     [bottomLine setTranslatesAutoresizingMaskIntoConstraints:NO];
     [contentView addSubview:bottomLine];
     [bottomLine setBackgroundColor:color];
+      bottomLine.hidden = YES;
     
+      
     [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[S]-0-|"
                                                                         options:0
                                                                         metrics:nil
@@ -88,7 +90,10 @@
                                                                         options:0
                                                                         metrics:@{@"height": @(height - 2.0f)}
                                                                           views:@{@"S": bottomLine}]];
+
+      
     UIView *tabIndicator = [UIView new];
+      tabIndicator.layer.cornerRadius = 6;
     [tabIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
     [contentView addSubview:tabIndicator];
     [tabIndicator setBackgroundColor:color];
@@ -109,7 +114,7 @@
                                                            multiplier:1.0f
                                                              constant:[tabViews[0] frame].size.width + 10]];
     
-    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[S(5)]-0-|"
+    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-5-[S]-5-|"
                                                                         options:0
                                                                         metrics:nil
                                                                           views:@{@"S": tabIndicator}]];
@@ -119,6 +124,7 @@
   
   return self;
 }
+
 
 - (void)animateToTabAtIndex:(NSInteger)index {
   CGFloat x = [[self tabViews][0] frame].origin.x - 5;

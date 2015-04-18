@@ -43,21 +43,26 @@
 
 // Implement either viewForTabAtIndex: or titleForTabAtIndex:
 //- (UIView *)viewForTabAtIndex:(NSInteger)index {
-//  return <#UIView#>;
+//    
+//    UIView *subview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 60, 10)];
+//    subview.layer.cornerRadius = 8 ;
+//    subview.backgroundColor = [UIColor colorWithRed:arc4random_uniform(255)/255.0f green:arc4random_uniform(255)/255.0f blue:arc4random_uniform(255)/255 alpha:1];
+//    
+//  return subview;
 //}
 
 - (NSString *)titleForTabAtIndex:(NSInteger)index {
   return [NSString stringWithFormat:@"Tab #%ld", (long) index + 1];
 }
 
-- (CGFloat)tabHeight {
-  // Default: 44.0f
-  return 50.0f;
-}
+//- (CGFloat)tabHeight {
+//  // Default: 44.0f
+//  return 40.0f;
+//}
 
 - (UIColor *)tabColor {
   // Default: [UIColor orangeColor];
-  return [UIColor purpleColor];
+  return [UIColor colorWithRed:arc4random_uniform(255)/255.0f green:arc4random_uniform(255)/255.0f blue:arc4random_uniform(255)/255.0f alpha:0.5];
 }
 
 - (UIColor *)tabBackgroundColor {
@@ -67,7 +72,7 @@
 
 - (UIFont *)titleFont {
   // Default: [UIFont fontWithName:@"HelveticaNeue-Thin" size:20.0f];
-  return [UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0f];
+    return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 }
 
 #pragma mark - Tab Pager Delegate
