@@ -72,7 +72,7 @@
 
 - (UIFont *)titleFont {
   // Default: [UIFont fontWithName:@"HelveticaNeue-Thin" size:20.0f];
-    return [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    return [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
 }
 
 #pragma mark - Tab Pager Delegate

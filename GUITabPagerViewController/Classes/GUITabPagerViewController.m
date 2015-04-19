@@ -9,6 +9,8 @@
 #import "GUITabPagerViewController.h"
 #import "GUITabScrollView.h"
 
+#define MaxLabelWidth 70
+
 @interface GUITabPagerViewController () <GUITabScrollDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageViewController;
@@ -39,10 +41,10 @@
       [(UIScrollView *)view setDelaysContentTouches:NO];
     }
   }
-
+  
   [[self pageViewController] setDataSource:self];
   [[self pageViewController] setDelegate:self];
-
+  
   [self addChildViewController:self.pageViewController];
   [self.view addSubview:self.pageViewController.view];
   [self.pageViewController didMoveToParentViewController:self];
@@ -50,6 +52,28 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
   [self reloadTabs];
+}
+
+- (void)viewWillLayoutSubviews
+{
+  [super viewWillLayoutSubviews];
+  
+  CGRect headerFrame = self.header.frame;
+  headerFrame.origin.x = 0;
+  headerFrame.origin.y = self.topLayoutGuide.length;
+  headerFrame.size.height = self.headerHeight;
+  headerFrame.size.width = self.view.bounds.size.width;
+  self.header.frame = headerFrame;
+  
+  CGRect pageViewFrame = self.pageViewController.view.frame;
+  pageViewFrame.origin.y = headerFrame.origin.y + headerFrame.size.height;
+  pageViewFrame.origin.x = 0;
+  pageViewFrame.size.width = self.view.bounds.size.width;
+  pageViewFrame.size.height = self.view.bounds.size.height - self.topLayoutGuide.length - self.bottomLayoutGuide.length - headerFrame.size.height;
+  self.pageViewController.view.frame = pageViewFrame;
+  
+  [self.view layoutIfNeeded];
+  [self.view setNeedsLayout];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -131,11 +155,12 @@
   
   [self reloadTabs];
   
-  CGRect frame = [[self view] frame];
-  frame.origin.y = [self headerHeight];
-  frame.size.height -= [self headerHeight];
-  
-  [[[self pageViewController] view] setFrame:frame];
+//  CGRect frame = [[self view] frame];
+//  CGFloat startY = self.header.frame.origin.y + self.header.frame.size.height;
+//  frame.origin.y = startY;
+////  frame.size.height -= startY;
+//  
+////  [[[self pageViewController] view] setFrame:frame];
   
   [self.pageViewController setViewControllers:@[[self viewControllers][0]]
                                     direction:UIPageViewControllerNavigationDirectionReverse
@@ -180,7 +205,7 @@
     if ([[self dataSource] respondsToSelector:@selector(titleFont)]) {
       font = [[self dataSource] titleFont];
     } else {
-      font = [UIFont fontWithName:@"HelveticaNeue-Thin" size:20.0f];
+      font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     }
     for (NSString *title in [self tabTitles]) {
       UILabel *label = [UILabel new];
@@ -190,7 +215,7 @@
       [label sizeToFit];
       
       CGRect frame = [label frame];
-      frame.size.width = MAX(frame.size.width + 20, 85);
+      frame.size.width = MAX(frame.size.width + 20, MaxLabelWidth);
       [label setFrame:frame];
       [tabViews addObject:label];
     }
@@ -200,7 +225,6 @@
     [[self header] removeFromSuperview];
   }
   CGRect frame = self.view.frame;
-  frame.origin.y = 0;
   frame.size.height = [self headerHeight];
   [self setHeader:[[GUITabScrollView alloc] initWithFrame:frame tabViews:tabViews tabBarHeight:[self headerHeight] tabColor:[self headerColor] backgroundColor:[self tabBackgroundColor]]];
   [[self header] setTabScrollDelegate:self];

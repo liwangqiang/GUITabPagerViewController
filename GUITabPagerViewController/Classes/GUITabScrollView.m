@@ -21,18 +21,20 @@
 @implementation GUITabScrollView
 
 - (instancetype)initWithFrame:(CGRect)frame tabViews:(NSArray *)tabViews tabBarHeight:(CGFloat)height tabColor:(UIColor *)color backgroundColor:(UIColor *)backgroundColor {
+  
   self = [super initWithFrame:frame];
   
   if (self) {
     [self setShowsHorizontalScrollIndicator:NO];
     [self setBounces:NO];
     
+    
     [self setTabViews:tabViews];
     
     CGFloat width = 10;
     
     for (UIView *view in tabViews) {
-      width += view.frame.size.width + 10;
+      width += view.bounds.size.width + 10;
     }
     
     [self setContentSize:CGSizeMake(MAX(width, self.frame.size.width), height)];
@@ -42,9 +44,11 @@
     UIView *contentView = [UIView new];
     [contentView setFrame:CGRectMake(0, 0, MAX(width, self.frame.size.width), height)];
     [contentView setBackgroundColor:backgroundColor];
-    [contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self addSubview:contentView];
     
+    // fix status bar bug
+    [contentView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    
+    [self addSubview:contentView];
     NSMutableString *VFL = [NSMutableString stringWithString:@"H:|"];
     NSMutableDictionary *views = [NSMutableDictionary dictionary];
     int index = 0;
@@ -74,26 +78,25 @@
                                                                         metrics:nil
                                                                           views:views]];
     
-    UIView *bottomLine = [UIView new];
-    [bottomLine setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [contentView addSubview:bottomLine];
-    [bottomLine setBackgroundColor:color];
-      bottomLine.hidden = YES;
+    // delete bottomLine
+//    UIView *bottomLine = [UIView new];
+//    [bottomLine setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    [contentView addSubview:bottomLine];
+//    [bottomLine setBackgroundColor:color];
+//    
+//    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[S]-0-|"
+//                                                                        options:0
+//                                                                        metrics:nil
+//                                                                          views:@{@"S": bottomLine}]];
+//    
+//    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-height-[S(2)]-0-|"
+//                                                                        options:0
+//                                                                        metrics:@{@"height": @(height - 2.0f)}
+//                                                                          views:@{@"S": bottomLine}]];
+//    
     
-      
-    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[S]-0-|"
-                                                                        options:0
-                                                                        metrics:nil
-                                                                          views:@{@"S": bottomLine}]];
-    
-    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-height-[S(2)]-0-|"
-                                                                        options:0
-                                                                        metrics:@{@"height": @(height - 2.0f)}
-                                                                          views:@{@"S": bottomLine}]];
-
-      
     UIView *tabIndicator = [UIView new];
-      tabIndicator.layer.cornerRadius = 6;
+    tabIndicator.layer.cornerRadius = 6;
     [tabIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
     [contentView addSubview:tabIndicator];
     [tabIndicator setBackgroundColor:color];
@@ -104,7 +107,7 @@
                                                                       toItem:contentView
                                                                    attribute:NSLayoutAttributeLeading
                                                                   multiplier:1.0f
-                                                                    constant:widthDifference / 2 + 5]];
+                                                                    constant:widthDifference / 2 + 10]];
     
     [self setTabIndicatorWidth:[NSLayoutConstraint constraintWithItem:tabIndicator
                                                             attribute:NSLayoutAttributeWidth
@@ -112,14 +115,16 @@
                                                                toItem:nil
                                                             attribute:0
                                                            multiplier:1.0f
-                                                             constant:[tabViews[0] frame].size.width + 10]];
+                                                             constant:[tabViews[0] frame].size.width ]];
     
-    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-5-[S]-5-|"
+    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[S]-8-|"
                                                                         options:0
                                                                         metrics:nil
                                                                           views:@{@"S": tabIndicator}]];
     
     [contentView addConstraints:@[[self tabIndicatorDisplacement], [self tabIndicatorWidth]]];
+    
+    
   }
   
   return self;
@@ -127,13 +132,13 @@
 
 
 - (void)animateToTabAtIndex:(NSInteger)index {
-  CGFloat x = [[self tabViews][0] frame].origin.x - 5;
+  CGFloat x = [[self tabViews][0] frame].origin.x ;
   
   for (int i = 0; i < index; i++) {
     x += [[self tabViews][i] frame].size.width + 10;
   }
   
-  CGFloat w = [[self tabViews][index] frame].size.width + 10;
+  CGFloat w = [[self tabViews][index] frame].size.width;
   [UIView animateWithDuration:0.4f
                    animations:^{
                      CGFloat p = x - (self.frame.size.width - w) / 2;
