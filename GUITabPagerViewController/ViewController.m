@@ -55,20 +55,19 @@
   return [NSString stringWithFormat:@"Tab #%ld", (long) index + 1];
 }
 
-//- (CGFloat)tabHeight {
-//  // Default: 44.0f
-//  return 40.0f;
-//}
+- (CGFloat)tabHeight {
+  // Default: 44.0f
+  return 40.0f;
+}
 
 - (UIColor *)tabColor {
-  // Default: [UIColor orangeColor];
+//   Default: [UIColor orangeColor];
   return [UIColor colorWithRed:arc4random_uniform(255)/255.0f green:arc4random_uniform(255)/255.0f blue:arc4random_uniform(255)/255.0f alpha:0.5];
 }
 
-- (UIColor *)tabBackgroundColor {
-  // Default: [UIColor colorWithWhite:0.95f alpha:1.0f];
-  return [UIColor lightTextColor];
-}
+//- (UIColor *)tabBackgroundColor {
+//  // Default: [UIColor colorWithWhite:0.95f alpha:1.0f];
+//}
 
 - (UIFont *)titleFont {
   // Default: [UIFont fontWithName:@"HelveticaNeue-Thin" size:20.0f];

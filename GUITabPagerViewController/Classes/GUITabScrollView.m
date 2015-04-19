@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSLayoutConstraint *tabIndicatorDisplacement;
 @property (strong, nonatomic) NSLayoutConstraint *tabIndicatorWidth;
 
+
 @end
 
 @implementation GUITabScrollView
@@ -26,7 +27,7 @@
   
   if (self) {
     [self setShowsHorizontalScrollIndicator:NO];
-    [self setBounces:NO];
+//    [self setBounces:NO];
     
     
     [self setTabViews:tabViews];
@@ -44,11 +45,17 @@
     UIView *contentView = [UIView new];
     [contentView setFrame:CGRectMake(0, 0, MAX(width, self.frame.size.width), height)];
     [contentView setBackgroundColor:backgroundColor];
+    [self addSubview:contentView];
     
     // fix status bar bug
-    [contentView setTranslatesAutoresizingMaskIntoConstraints:YES];
+    [contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self addConstraints:
+      [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[contentView]-0-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:@{@"contentView":contentView,@"view":self}]];
     
-    [self addSubview:contentView];
+    [self addConstraints:
+     [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[contentView(==view)]-0-|" options:NSLayoutFormatAlignAllLeft metrics:nil views:@{@"contentView":contentView,@"view":self}]];
+    
+    
     NSMutableString *VFL = [NSMutableString stringWithString:@"H:|"];
     NSMutableDictionary *views = [NSMutableDictionary dictionary];
     int index = 0;
@@ -60,7 +67,7 @@
       [VFL appendFormat:@"-%f-[T%d(%f)]", index ? 10.0f : 10.0 + widthDifference / 2, index, tab.frame.size.width];
       [views setObject:tab forKey:[NSString stringWithFormat:@"T%d", index]];
       
-      [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[T]-2-|"
+      [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[T]-0-|"
                                                                           options:0
                                                                           metrics:nil
                                                                             views:@{@"T": tab}]];
@@ -100,7 +107,7 @@
     [tabIndicator setTranslatesAutoresizingMaskIntoConstraints:NO];
     [contentView addSubview:tabIndicator];
     [tabIndicator setBackgroundColor:color];
-    
+//    
     [self setTabIndicatorDisplacement:[NSLayoutConstraint constraintWithItem:tabIndicator
                                                                    attribute:NSLayoutAttributeLeft
                                                                    relatedBy:NSLayoutRelationEqual
@@ -115,12 +122,13 @@
                                                                toItem:nil
                                                             attribute:0
                                                            multiplier:1.0f
-                                                             constant:[tabViews[0] frame].size.width ]];
+                                                             constant:[tabViews[0] bounds].size.width]];
     
-    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-8-[S]-8-|"
+    
+    [contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[tabIndicator(==height)]-basedOnHeight-|"
                                                                         options:0
-                                                                        metrics:nil
-                                                                          views:@{@"S": tabIndicator}]];
+                                                                        metrics:@{@"height":@(height * 0.7),@"basedOnHeight":@((height * 0.3)/2), }
+                                                                          views:@{@"tabIndicator": tabIndicator}]];
     
     [contentView addConstraints:@[[self tabIndicatorDisplacement], [self tabIndicatorWidth]]];
     
@@ -129,7 +137,6 @@
   
   return self;
 }
-
 
 - (void)animateToTabAtIndex:(NSInteger)index {
   CGFloat x = [[self tabViews][0] frame].origin.x ;

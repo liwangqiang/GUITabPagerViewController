@@ -50,10 +50,6 @@
   [self.pageViewController didMoveToParentViewController:self];
 }
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-  [self reloadTabs];
-}
-
 - (void)viewWillLayoutSubviews
 {
   [super viewWillLayoutSubviews];
@@ -155,12 +151,6 @@
   
   [self reloadTabs];
   
-//  CGRect frame = [[self view] frame];
-//  CGFloat startY = self.header.frame.origin.y + self.header.frame.size.height;
-//  frame.origin.y = startY;
-////  frame.size.height -= startY;
-//  
-////  [[[self pageViewController] view] setFrame:frame];
   
   [self.pageViewController setViewControllers:@[[self viewControllers][0]]
                                     direction:UIPageViewControllerNavigationDirectionReverse
@@ -182,7 +172,7 @@
   if ([[self dataSource] respondsToSelector:@selector(tabColor)]) {
     [self setHeaderColor:[[self dataSource] tabColor]];
   } else {
-    [self setHeaderColor:[UIColor orangeColor]];
+    [self setHeaderColor:[[UIColor orangeColor]colorWithAlphaComponent:0.3]];
   }
   
   if ([[self dataSource] respondsToSelector:@selector(tabBackgroundColor)]) {
@@ -224,9 +214,8 @@
   if ([self header]) {
     [[self header] removeFromSuperview];
   }
-  CGRect frame = self.view.frame;
-  frame.size.height = [self headerHeight];
-  [self setHeader:[[GUITabScrollView alloc] initWithFrame:frame tabViews:tabViews tabBarHeight:[self headerHeight] tabColor:[self headerColor] backgroundColor:[self tabBackgroundColor]]];
+  
+  [self setHeader:[[GUITabScrollView alloc] initWithFrame:CGRectZero tabViews:tabViews tabBarHeight:[self headerHeight] tabColor:[self headerColor] backgroundColor:[self tabBackgroundColor]]];
   [[self header] setTabScrollDelegate:self];
   
   [[self view] addSubview:[self header]];

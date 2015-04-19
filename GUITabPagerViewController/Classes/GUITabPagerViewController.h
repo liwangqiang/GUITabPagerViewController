@@ -27,9 +27,12 @@
 - (NSInteger)numberOfViewControllers;
 - (UIViewController *)viewControllerForIndex:(NSInteger)index;
 
+
 @optional
+// Must implement either viewForTabAtIndex: or titleForTabAtIndex:
 - (UIView *)viewForTabAtIndex:(NSInteger)index;
 - (NSString *)titleForTabAtIndex:(NSInteger)index;
+
 - (CGFloat)tabHeight;
 - (UIColor *)tabColor;
 - (UIColor *)tabBackgroundColor;
