@@ -1,6 +1,6 @@
 # GUITabPagerViewController
 
-<img src="preview.gif" alt="Animated gif">
+<img src="screenshot.png">
 
 ## Installation
 **CocoaPods** (recommended)  
