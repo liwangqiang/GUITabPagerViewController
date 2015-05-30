@@ -2,21 +2,13 @@
 
 <img src="screenshot.png">
 
-## Installation
-**CocoaPods** (recommended)  
-Add the following line to your `Podfile`:  
-`pod 'GUITabPagerViewController', '~> 0.0.5'`  
-And then add `#import <GUITabPagerViewController.h>` to your view controller.
-
-**Manual**  
-Copy the folders `Classes` to your project, then add `#import "GUITabPagerViewController.h"` to your view controller.
-
 ## Usage
 To use it, you should create a view controller that extends `GUITabPagerViewController`. Write your `viewDidLoad` as follows:
 
 ```obj-c
 - (void)viewDidLoad {
   [super viewDidLoad];
+  [self setDelegate:self];
   [self setDataSource:self];
 }
 
