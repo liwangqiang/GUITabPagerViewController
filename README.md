@@ -1,6 +1,5 @@
 # GUITabPagerViewController
-
-<img src="screenshot.png">
+<img src="screenshot.png" width = "300px">
 
 ## Usage
 To use it, you should create a view controller that extends `GUITabPagerViewController`. Write your `viewDidLoad` as follows:
